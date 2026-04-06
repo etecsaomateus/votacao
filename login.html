@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+    <title>Acesso à Urna - Etec São Mateus</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Mesma Paleta de Cores Padrão CPS / Etec */
+        :root {
+            --cps-red: #B30000;
+            --cps-dark: #212529;
+            --cps-gray: #f4f6f9;
+            --cps-light-gray: #e9ecef;
+            --white: #ffffff;
+            --success: #198754;
+            --error: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--cps-gray);
+            color: var(--cps-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Cabeçalho Institucional */
+        header {
+            background-color: var(--cps-red);
+            color: var(--white);
+            padding: 15px 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+        }
+
+        .header-title span {
+            font-size: 0.85rem;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        /* Container de Login */
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--white);
+            border-top: 5px solid var(--cps-red);
+            border-radius: 8px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .login-card h2 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            color: var(--cps-dark);
+        }
+
+        .login-card p {
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+        }
+
+        /* Formulário */
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--cps-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+            background-color: var(--cps-gray);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--cps-red);
+            background-color: var(--white);
+            box-shadow: 0 0 0 3px rgba(179, 0, 0, 0.1);
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            background-color: var(--success);
+            color: var(--white);
+            border: none;
+            padding: 16px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background-color: #146c43;
+        }
+
+        .btn-submit:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        /* Mensagem de Erro */
+        .error-message {
+            color: var(--error);
+            background-color: #f8d7da;
+            border: 1px solid #f5c2c7;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: none; /* Escondido por padrão */
+        }
+
+        .btn-voltar {
+            display: inline-block;
+            margin-top: 25px;
+            color: #6c757d;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 700;
+            transition: color 0.2s;
+        }
+
+        .btn-voltar:hover {
+            color: var(--cps-red);
+        }
+
+        /* Rodapé */
+        footer {
+            background-color: var(--cps-dark);
+            color: var(--white);
+            text-align: center;
+            padding: 20px;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <div class="header-title">
+                <h1>ETEC SÃO MATEUS</h1>
+                <span>Centro Paula Souza</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="login-card">
+            <h2>Acesso à Urna</h2>
+            <p>Identifique-se para registrar o seu voto.</p>
+
+            <div id="error-alert" class="error-message"></div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="cpf">Seu CPF</label>
+                    <input type="text" id="cpf" class="form-control" placeholder="000.000.000-00" maxlength="14" required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="data-nascimento">Data de Nascimento</label>
+                    <input type="date" id="data-nascimento" class="form-control" required>
+                </div>
+
+                <button type="submit" id="btn-login" class="btn-submit">Entrar e Votar</button>
+            </form>
+
+            <a href="index.html" class="btn-voltar">← Voltar para a parcial de votos</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Etec São Mateus. Sistema de Votação Eletrônica.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        const _0x55ea02=_0x203b;(function(_0xb624bb,_0x2283c5){const _0x25da03=_0x203b,_0x4962e1=_0xb624bb();while(!![]){try{const _0x441946=-parseInt(_0x25da03(0x1ff))/0x1+parseInt(_0x25da03(0x1ef))/0x2+-parseInt(_0x25da03(0x1f8))/0x3*(parseInt(_0x25da03(0x202))/0x4)+parseInt(_0x25da03(0x207))/0x5+-parseInt(_0x25da03(0x1ec))/0x6+-parseInt(_0x25da03(0x206))/0x7+-parseInt(_0x25da03(0x1f7))/0x8*(-parseInt(_0x25da03(0x20c))/0x9);if(_0x441946===_0x2283c5)break;else _0x4962e1['push'](_0x4962e1['shift']());}catch(_0x1ca0c9){_0x4962e1['push'](_0x4962e1['shift']());}}}(_0x3fe7,0x85559));const supabaseUrl=_0x55ea02(0x20a),supabaseKey=_0x55ea02(0x1e9),supabase2=window['supabase'][_0x55ea02(0x20b)](supabaseUrl,supabaseKey),form=document[_0x55ea02(0x1f0)]('login-form'),cpfInput=document[_0x55ea02(0x1f0)](_0x55ea02(0x1fb)),dataInput=document['getElementById'](_0x55ea02(0x211)),btnLogin=document[_0x55ea02(0x1f0)]('btn-login'),errorAlert=document[_0x55ea02(0x1f0)](_0x55ea02(0x1f2));cpfInput[_0x55ea02(0x1ee)](_0x55ea02(0x1f6),function(_0x17ee6b){const _0x326f19=_0x55ea02;let _0x358a67=_0x17ee6b['target'][_0x326f19(0x1fd)][_0x326f19(0x1eb)](/\D/g,'');if(_0x358a67['length']>0xb)_0x358a67=_0x358a67['slice'](0x0,0xb);_0x358a67=_0x358a67[_0x326f19(0x1eb)](/(\d{3})(\d)/,'$1.$2'),_0x358a67=_0x358a67[_0x326f19(0x1eb)](/(\d{3})(\d)/,_0x326f19(0x1f5)),_0x358a67=_0x358a67[_0x326f19(0x1eb)](/(\d{3})(\d{1,2})$/,'$1-$2'),_0x17ee6b[_0x326f19(0x210)][_0x326f19(0x1fd)]=_0x358a67;}),form[_0x55ea02(0x1ee)](_0x55ea02(0x1ed),async function(_0x7b3873){const _0x1109ba=_0x55ea02;_0x7b3873['preventDefault'](),errorAlert[_0x1109ba(0x1f9)][_0x1109ba(0x201)]='none',btnLogin[_0x1109ba(0x1e8)]=!![],btnLogin[_0x1109ba(0x1fe)]='Autenticando...';const _0xabc8c0=cpfInput['value'][_0x1109ba(0x1eb)](/\D/g,'');if(_0xabc8c0[_0x1109ba(0x20e)]!==0xb){if(_0x1109ba(0x200)==='JyXnT')_0x3e4d50[_0x1109ba(0x209)](_0x1109ba(0x20f),_0x4795d7),_0x4b9e03(_0x1109ba(0x205));else{mostrarErro(_0x1109ba(0x213));return;}}const _0xbbe3df=_0xabc8c0+_0x1109ba(0x203),_0x26772e=dataInput[_0x1109ba(0x1fd)],[_0x481fa4,_0x48b3cd,_0x11e880]=_0x26772e[_0x1109ba(0x212)]('-'),_0x300719=''+_0x11e880+_0x48b3cd+_0x481fa4,{data:_0x5319f8,error:_0x16b01f}=await supabase2[_0x1109ba(0x1f1)][_0x1109ba(0x1fc)]({'email':_0xbbe3df,'password':_0x300719});if(_0x16b01f){if(_0x1109ba(0x1ea)!=='FBiUk'){let _0x548c62=_0x3c9a5e[_0x1109ba(0x210)]['value']['replace'](/\D/g,'');if(_0x548c62[_0x1109ba(0x20e)]>0xb)_0x548c62=_0x548c62[_0x1109ba(0x1fa)](0x0,0xb);_0x548c62=_0x548c62['replace'](/(\d{3})(\d)/,_0x1109ba(0x1f5)),_0x548c62=_0x548c62['replace'](/(\d{3})(\d)/,'$1.$2'),_0x548c62=_0x548c62[_0x1109ba(0x1eb)](/(\d{3})(\d{1,2})$/,_0x1109ba(0x208)),_0x52f56a[_0x1109ba(0x210)][_0x1109ba(0x1fd)]=_0x548c62;}else console['error'](_0x1109ba(0x20f),_0x16b01f),mostrarErro(_0x1109ba(0x205));}else window[_0x1109ba(0x204)][_0x1109ba(0x20d)]=_0x1109ba(0x1f4);});function _0x203b(_0xf54312,_0x51dfad){_0xf54312=_0xf54312-0x1e8;const _0x3fe7e0=_0x3fe7();let _0x203bde=_0x3fe7e0[_0xf54312];return _0x203bde;}function mostrarErro(_0x203c44){const _0x2b64d5=_0x55ea02;errorAlert[_0x2b64d5(0x1fe)]=_0x203c44,errorAlert[_0x2b64d5(0x1f9)][_0x2b64d5(0x201)]='block',btnLogin[_0x2b64d5(0x1e8)]=![],btnLogin[_0x2b64d5(0x1fe)]=_0x2b64d5(0x1f3);}function _0x3fe7(){const _0x1b7fbd=['auth','error-alert','Entrar\x20e\x20Votar','votacao.html','$1.$2','input','3592UCpchw','139371yJZpRK','style','slice','cpf','signInWithPassword','value','innerText','896059FPKUkl','kMJid','display','12ZFLJaM','@etecsaomateus.com','location','CPF\x20não\x20cadastrado\x20ou\x20Data\x20de\x20Nascimento\x20incorreta.','2518558RPLHvJ','5320555oHDHba','$1-$2','error','https://wacvechtyknyyhdobewj.supabase.co','createClient','4887CsrUaW','href','length','Erro\x20no\x20login:','target','data-nascimento','split','Por\x20favor,\x20digite\x20um\x20CPF\x20válido.','disabled','sb_publishable_MSzsLryTStVbW8554cuJcA_0suvsLXv','FBiUk','replace','2409072qlLbLy','submit','addEventListener','2069910Ktnrab','getElementById'];_0x3fe7=function(){return _0x1b7fbd;};return _0x3fe7();}
+    </script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+    <title>Urna Eletrônica - Etec São Mateus</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Paleta Institucional CPS */
+        :root {
+            --cps-red: #B30000;
+            --cps-dark: #212529;
+            --cps-gray: #f4f6f9;
+            --cps-light-gray: #e9ecef;
+            --white: #ffffff;
+            --success: #198754;
+            --error: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--cps-gray);
+            color: var(--cps-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Cabeçalho Institucional */
+        header {
+            background-color: var(--cps-red);
+            color: var(--white);
+            padding: 15px 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-branding {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-etec {
+            height: 45px;
+            width: auto;
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+        }
+
+        .header-title span {
+            font-size: 0.85rem;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        /* Container da Urna */
+        main {
+            flex: 1;
+            max-width: 700px;
+            width: 100%;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .urna-card {
+            background: var(--white);
+            border-top: 5px solid var(--cps-red);
+            border-radius: 8px;
+            padding: 40px 30px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .urna-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--cps-light-gray);
+            padding-bottom: 20px;
+        }
+
+        .urna-header h2 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--cps-dark);
+        }
+
+        .urna-header p {
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        /* Estilo das Opções de Voto */
+        .chapas-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .chapa-label {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border: 2px solid var(--cps-light-gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--white);
+            position: relative;
+        }
+
+        .chapa-label:hover {
+            border-color: var(--cps-red);
+            background: #fffafa;
+        }
+
+        .chapa-label.selecionada {
+            border-color: var(--success);
+            background-color: #f0fdf4;
+            box-shadow: 0 4px 10px rgba(25, 135, 84, 0.15);
+        }
+
+        .chapa-label input[type="radio"] {
+            display: none;
+        }
+
+        .chapa-numero-badge {
+            background-color: var(--cps-dark);
+            color: var(--white);
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            font-weight: 900;
+            margin-right: 20px;
+        }
+
+        .chapa-label.selecionada .chapa-numero-badge {
+            background-color: var(--success);
+        }
+
+        .chapa-info h3 {
+            font-size: 1.3rem;
+            color: var(--cps-dark);
+        }
+
+        .check-icon {
+            display: none;
+            position: absolute;
+            right: 20px;
+            color: var(--success);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .chapa-label.selecionada .check-icon {
+            display: block;
+        }
+
+        /* Botão Confirmar */
+        .btn-confirmar {
+            width: 100%;
+            background-color: var(--success);
+            color: var(--white);
+            border: none;
+            padding: 20px;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(25, 135, 84, 0.3);
+        }
+
+        .btn-confirmar:hover:not(:disabled) {
+            background-color: #146c43;
+            transform: translateY(-2px);
+        }
+
+        .btn-confirmar:disabled {
+            background-color: #a5d8b6;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* Mensagens de Alerta e Voto Confirmado */
+        .alert-box {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-align: center;
+            display: none;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: var(--error);
+            border: 1px solid #f5c2c7;
+        }
+
+        .alert-success {
+            background-color: #d1e7dd;
+            color: var(--success);
+            border: 1px solid #badbcc;
+        }
+
+        .voto-registrado-box {
+            background-color: #f8f9fa;
+            border: 2px solid var(--success);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            display: none; /* Escondido por padrão */
+        }
+
+        .voto-registrado-box h3 {
+            color: var(--success);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .voto-registrado-box p {
+            color: var(--cps-dark);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .voto-registrado-box strong {
+            color: var(--cps-red);
+        }
+
+        .btn-voltar-home {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: var(--cps-dark);
+            color: var(--white);
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: 700;
+            transition: background-color 0.2s;
+        }
+
+        .btn-voltar-home:hover {
+            background-color: #000;
+        }
+
+        .loading-text {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        footer {
+            background-color: var(--cps-dark);
+            color: var(--white);
+            text-align: center;
+            padding: 20px;
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <div class="header-branding">
+                <img src="img/logo.png" alt="Logo Etec" class="logo-etec">
+                <div class="header-title">
+                    <h1>ETEC SÃO MATEUS</h1>
+                    <span>Centro Paula Souza</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="urna-card">
+            
+            <div id="voto-registrado-container" class="voto-registrado-box">
+                </div>
+
+            <div id="area-votacao">
+                <div class="urna-header">
+                    <h2>Cédula de Votação</h2>
+                    <p>Escolha a chapa desejada e confirme o seu voto.</p>
+                </div>
+
+                <div id="mensagem-alerta" class="alert-box"></div>
+
+                <form id="form-votacao">
+                    <div id="lista-chapas" class="chapas-container">
+                        <div class="loading-text">Carregando opções de voto...</div>
+                    </div>
+
+                    <button type="submit" id="btn-confirmar" class="btn-confirmar" disabled>CONFIRMAR VOTO</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Etec São Mateus. Sistema de Votação Eletrônica.</p>
+    </footer>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+    <script>
+        const _0x5120ed=_0x4fd7;(function(_0x3668d1,_0x53897c){const _0x5d38bd=_0x4fd7,_0x192916=_0x3668d1();while(!![]){try{const _0x55a990=parseInt(_0x5d38bd(0xa0))/0x1+-parseInt(_0x5d38bd(0x82))/0x2+-parseInt(_0x5d38bd(0xae))/0x3+parseInt(_0x5d38bd(0xba))/0x4+parseInt(_0x5d38bd(0x73))/0x5*(parseInt(_0x5d38bd(0x75))/0x6)+-parseInt(_0x5d38bd(0x8d))/0x7*(-parseInt(_0x5d38bd(0x76))/0x8)+parseInt(_0x5d38bd(0x99))/0x9;if(_0x55a990===_0x53897c)break;else _0x192916['push'](_0x192916['shift']());}catch(_0x520ba8){_0x192916['push'](_0x192916['shift']());}}}(_0x4a03,0xc497e));function _0x4fd7(_0x19f472,_0x48030a){_0x19f472=_0x19f472-0x6f;const _0x4a03b4=_0x4a03();let _0x4fd75b=_0x4a03b4[_0x19f472];return _0x4fd75b;}const apiUrl=_0x5120ed(0x8f),publicToken=_0x5120ed(0xa9),dbClient=window['su'+_0x5120ed(0x7c)][_0x5120ed(0x70)](apiUrl,publicToken);let alunoAtual=null;document['addEventListener']('DOMContentLoaded',async()=>{await verificarSessao();});async function verificarSessao(){const _0x43cdf0=_0x5120ed,{data:{user:_0x8023ac},error:_0x3ef374}=await dbClient[_0x43cdf0(0xb9)][_0x43cdf0(0x7f)]();if(!_0x8023ac||_0x3ef374){window[_0x43cdf0(0x9d)][_0x43cdf0(0x74)](_0x43cdf0(0xb5));return;}alunoAtual=_0x8023ac,await verificarSeJaVotou(_0x8023ac['id']);}async function verificarSeJaVotou(_0x28cba2){const _0x506ff0=_0x5120ed,{data:_0x1e9f60,error:_0x32bc67}=await dbClient['from'](_0x506ff0(0x8c))[_0x506ff0(0xad)]('\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20criado_em,\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20chapas\x20(\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20numero,\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20nome\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20)\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20')['eq'](_0x506ff0(0x89),_0x28cba2)[_0x506ff0(0x95)]();if(_0x1e9f60){document['getElementById'](_0x506ff0(0x94))['style'][_0x506ff0(0xab)]=_0x506ff0(0x83);const _0x5186cd=new Date(_0x1e9f60[_0x506ff0(0x72)])[_0x506ff0(0xa4)](_0x506ff0(0x91)),_0x1b55ea='Chapa\x20'+_0x1e9f60['chapas'][_0x506ff0(0xa5)]+_0x506ff0(0x9c)+_0x1e9f60[_0x506ff0(0x71)]['nome'],_0x141d07=document['getElementById'](_0x506ff0(0x87));_0x141d07[_0x506ff0(0x81)]=_0x506ff0(0x86)+_0x1b55ea+_0x506ff0(0xaa)+_0x5186cd+_0x506ff0(0xaf),_0x141d07[_0x506ff0(0x9a)]['display']=_0x506ff0(0x90),setTimeout(()=>{const _0x574b03=_0x506ff0;dbClient[_0x574b03(0xb9)][_0x574b03(0xa1)]();},0x1388);}else await carregarChapas();}async function carregarChapas(){const _0xd7de0b=_0x5120ed,{data:_0x46ca16,error:_0x529699}=await dbClient[_0xd7de0b(0x8e)]('chapas')[_0xd7de0b(0xad)]('*')['order']('numero',{'ascending':!![]}),_0x13e62e=document[_0xd7de0b(0x6f)](_0xd7de0b(0xa7));if(_0x529699){console[_0xd7de0b(0x7e)](_0xd7de0b(0xb4),_0x529699),_0x13e62e[_0xd7de0b(0x81)]='<div\x20class=\x22loading-text\x22\x20style=\x22color:\x20red;\x22>Erro\x20ao\x20carregar\x20as\x20chapas.</div>';return;}if(_0x46ca16[_0xd7de0b(0xb3)]===0x0){_0x13e62e[_0xd7de0b(0x81)]=_0xd7de0b(0x7a);return;}_0x13e62e[_0xd7de0b(0x81)]='',_0x46ca16['forEach'](_0x5d261d=>{const _0xf35085=_0xd7de0b;_0x13e62e['innerHTML']+='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20class=\x22chapa-label\x22\x20onclick=\x22selecionarCard(this)\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22radio\x22\x20name=\x22chapa\x22\x20value=\x22'+_0x5d261d['id']+_0xf35085(0xbc)+_0x5d261d[_0xf35085(0xa5)]+_0xf35085(0x80)+_0x5d261d[_0xf35085(0x84)]+_0xf35085(0x8b)+(_0x5d261d[_0xf35085(0xa3)]||'')+_0xf35085(0xb7);});}function selecionarCard(_0x5ebaa9){const _0x4494c4=_0x5120ed,_0x4bcf28=document[_0x4494c4(0x88)](_0x4494c4(0xa6));_0x4bcf28[_0x4494c4(0xb6)](_0x5e9a80=>_0x5e9a80[_0x4494c4(0xa2)][_0x4494c4(0xb1)](_0x4494c4(0x7d))),_0x5ebaa9['classList']['add'](_0x4494c4(0x7d)),document[_0x4494c4(0x6f)]('btn-confirmar')[_0x4494c4(0x79)]=![];}function _0x4a03(){const _0x36a6c3=['select','4125003VSUwGq','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<a\x20href=\x22index.html\x22\x20class=\x22btn-voltar-home\x22>Ir\x20para\x20a\x20página\x20inicial</a>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','code','remove','submit','length','Erro:','login.html','forEach','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22check-icon\x22>✓</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','PROCESSANDO...','auth','3194104LVGjlD','input[name=\x22chapa\x22]:checked','\x22\x20required>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22chapa-numero-badge\x22>','getElementById','createClient','chapas','criado_em','50uxSDRq','replace','114810TyeLWb','24nQVNIQ','addEventListener','alert-box\x20alert-success','disabled','<div\x20class=\x22loading-text\x22>Nenhuma\x20chapa\x20cadastrada\x20para\x20votação.</div>','23505','pabase','selecionada','error','getUser','</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22chapa-info\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h3>Chapa\x20','innerHTML','743138aVNtFR','none','nome','mensagem-alerta','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h3>Voto\x20Já\x20Registrado\x20✅</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p>O\x20seu\x20voto\x20já\x20foi\x20contabilizado\x20em\x20nossa\x20urna\x20eletrônica.</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p\x20style=\x22margin-top:\x2020px;\x22>Você\x20votou\x20na:\x20<br><strong>','voto-registrado-container','querySelectorAll','aluno_id','value','</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p\x20style=\x22font-size:\x200.8rem;\x20color:\x20#6c757d;\x20margin-top:\x205px;\x22>','votos','257369RvAymg','from','https://wacvechtyknyyhdobewj.supabase.co','block','pt-BR','CONFIRMAR\x20VOTO','index.html','area-votacao','maybeSingle','VOTO\x20COMPUTADO\x20COM\x20SUCESSO!','innerText','alert-box\x20alert-error','10144773AopODA','style','form-votacao','\x20-\x20','location','className','querySelector','324442mWbmGB','signOut','classList','integrantes','toLocaleString','numero','.chapa-label','lista-chapas','rQEwC','sb_publishable_MSzsLryTStVbW8554cuJcA_0suvsLXv','</strong></p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p\x20style=\x22font-size:\x200.9rem;\x20color:\x20#666;\x20margin-top:\x2010px;\x22>Registrado\x20em:\x20','display','preventDefault'];_0x4a03=function(){return _0x36a6c3;};return _0x4a03();}document[_0x5120ed(0x6f)](_0x5120ed(0x9b))[_0x5120ed(0x77)](_0x5120ed(0xb2),async function(_0x306f38){const _0x3065aa=_0x5120ed;_0x306f38[_0x3065aa(0xac)]();const _0x29208e=document[_0x3065aa(0x6f)]('btn-confirmar'),_0x299099=document[_0x3065aa(0x6f)](_0x3065aa(0x85)),_0x10cf1b=document[_0x3065aa(0x9f)](_0x3065aa(0xbb));if(!_0x10cf1b||!alunoAtual)return;const _0x4ba63d=_0x10cf1b[_0x3065aa(0x8a)];_0x29208e['disabled']=!![],_0x29208e[_0x3065aa(0x97)]=_0x3065aa(0xb8),_0x299099[_0x3065aa(0x9a)][_0x3065aa(0xab)]=_0x3065aa(0x83);const {error:_0x13585d}=await dbClient[_0x3065aa(0x8e)](_0x3065aa(0x8c))['insert']([{'aluno_id':alunoAtual['id'],'chapa_id':_0x4ba63d}]);if(_0x13585d){_0x29208e[_0x3065aa(0x79)]=![],_0x29208e['innerText']=_0x3065aa(0x92),_0x299099[_0x3065aa(0x9a)][_0x3065aa(0xab)]=_0x3065aa(0x90);_0x13585d[_0x3065aa(0xb0)]===_0x3065aa(0x7b)?_0x3065aa(0xa8)===_0x3065aa(0xa8)?(_0x299099[_0x3065aa(0x9e)]=_0x3065aa(0x98),_0x299099['innerText']='Seu\x20CPF\x20já\x20registrou\x20um\x20voto\x20nesta\x20eleição!'):_0x298ed1[_0x3065aa(0x9d)]['replace'](_0x3065aa(0x93)):(_0x299099[_0x3065aa(0x9e)]='alert-box\x20alert-error',_0x299099[_0x3065aa(0x97)]='Erro\x20ao\x20processar\x20o\x20voto.\x20Tente\x20novamente.');return;}_0x299099['className']=_0x3065aa(0x78),_0x299099[_0x3065aa(0x97)]=_0x3065aa(0x96),_0x299099[_0x3065aa(0x9a)][_0x3065aa(0xab)]=_0x3065aa(0x90),_0x29208e['innerText']='VOTO\x20REGISTRADO',await dbClient[_0x3065aa(0xb9)][_0x3065aa(0xa1)](),setTimeout(()=>{const _0x467d2e=_0x3065aa;window[_0x467d2e(0x9d)][_0x467d2e(0x74)](_0x467d2e(0x93));},0x7d0);});
+    </script>
+</body>
+</html>
